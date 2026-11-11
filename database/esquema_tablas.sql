@@ -74,30 +74,213 @@ CREATE TABLE IF NOT EXISTS cotizacion_detalles (
     CONSTRAINT fk_cd_items FOREIGN KEY (id_item) 
         REFERENCES items(id_item) ON DELETE RESTRICT
 );
-
--- Inserción de datos iniciales
-INSERT INTO categorias (nombre) VALUES 
-('Tarimas y Estructuras'),
-('Iluminación Móvil'),
-('Efectos y Estrobos'),
-('Personal')
+-- =====================================================
+-- 1. ASEGURAR CATEGORÍAS TÉCNICAS
+-- =====================================================
+INSERT INTO categorias (nombre) VALUES
+    ('Sistema de Sonido Principal'),
+    ('Monitoreo de Escenario y Microfonía'),
+    ('Iluminación y Efectos Visuales'),
+    ('Pantallas LED y Circuito Visual'),
+    ('Tarimas y Estructuras de Montaje')
 ON CONFLICT (nombre) DO NOTHING;
 
-INSERT INTO items (id_categoria, nombre, descripcion, precio_unitario, stock_disponible) VALUES
-(1, 'Tarima modular 2m x 3m', 'Módulos antideslizantes con estructura', 600.00, 4),
-(1, 'Torre elevadora (Catraca) 3m', 'Torre telescópica con winche', 250.00, 6),
-(3, 'Luz Estrobo LED', 'Panel estroboscópico de alta potencia', 150.00, 16),
-(2, 'Cabeza Móvil Beam 360', 'Luminaria robotizada Beam 360', 350.00, 8),
-(4, 'Servicio de DJ', 'Operador de cabina por 6 horas', 800.00, 2)
+-- =====================================================
+-- 2. POBLAR / ACTUALIZAR EL STOCK TOTAL DE ITEMS
+-- =====================================================
+INSERT INTO items (id_categoria, nombre, descripcion, precio_unitario, stock_disponible)
+VALUES
+    -- Sistema de Sonido Principal
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Sistema de Sonido Principal'),
+     'Subwoofer BASSBOSS 18"', 'Subgrave activo de alta potencia y respuesta en frecuencias ultra-bajas', 350.00, 20),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Sistema de Sonido Principal'),
+     'Cajas acústicas NEXO 10"', 'Sistema de medios/agudos de alta fidelidad para refuerzo sonoro principal (10 por lado)', 200.00, 20),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Sistema de Sonido Principal'),
+     'Consola Digital Midas X32', 'Consola digital para mezcla en vivo FOH con procesamiento multicanal', 500.00, 1),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Sistema de Sonido Principal'),
+     'Consola Digital Soundcraft Ui24R', 'Mezcladora digital en rack controlable por Wi-Fi para monitoreo y sala', 300.00, 1),
+
+    -- Monitoreo de Escenario y Microfonía
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Monitoreo de Escenario y Microfonía'),
+     'Monitores de Piso RCF', 'Monitor de retorno autoamplificado RCF para escenario', 130.00, 6),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Monitoreo de Escenario y Microfonía'),
+     'Monitores de Piso JBL', 'Monitor de retorno autoamplificado JBL para escenario', 120.00, 4),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Monitoreo de Escenario y Microfonía'),
+     'Micrófonos Inalámbricos', 'Sistema de microfonía inalámbrica profesional para voces y animación', 80.00, 4),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Monitoreo de Escenario y Microfonía'),
+     'Micrófono con Cable Shure Beta 58A / 57A', 'Micrófonos dinámicos supercardioides profesionales para voces e instrumentos', 50.00, 12),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Monitoreo de Escenario y Microfonía'),
+     'Pedestales de alta gama Hércules', 'Soporte telescópico reforzado con agarre rápido para microfonía', 25.00, 12),
+
+    -- Iluminación y Efectos Visuales
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Cabezas Móviles Weinas Beam', 'Luminarias robóticas de haz concentrado Beam para efectos aéreos', 150.00, 6),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Barras LED RGB', 'Barra lineal LED para iluminación perimetral y baño de color', 70.00, 20),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Estrobo 1000 W', 'Luz estroboscópica de alto impacto visual para remates de iluminación', 80.00, 8),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Estrobo 1500 W', 'Luz estroboscópica de máxima potencia para conciertos masivos', 100.00, 8),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Máquina lanzahumo Weinas', 'Generador de niebla DMX de alto caudal para realce de luces', 120.00, 2),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Iluminación y Efectos Visuales'),
+     'Máquinas lanzallamas DMX', 'Efecto pirotécnico escénico de fuego controlado por DMX', 250.00, 2),
+
+    -- Pantallas LED y Circuito Visual
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Pantallas LED y Circuito Visual'),
+     'Módulo Gabinete LED NovaStar Outdoor (1.00 m x 0.50 m)', 'Gabinete para pantalla LED gigante exterior de alta luminosidad P3.91', 180.00, 12),
+
+    -- Tarimas y Estructuras de Montaje
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Tarima Principal 8.00m x 5.00m x 1.50m con escaleras', 'Plataforma escénica modular reforzada con escalera de acceso', 1800.00, 1),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Tarima Mediana 5.00m x 3.50m x 1.00m', 'Plataforma escénica modular mediana con altura de 1 metro', 1100.00, 1),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Puente de Iluminación Truss 9.00 m', 'Estructura truss de aluminio de alta resistencia para colgado de luces', 450.00, 3),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Torres Elevadoras Telescópicas 3.00 m (Par)', 'Par de torres elevadoras con malacate manual y acople superior para truss', 350.00, 1),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Torre de Andamio Reforzado 5.40 m', 'Torres de andamio reforzado de dos módulos por lado para colgado', 300.00, 4),
+
+    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Torre Multidireccional Layher 6.00 m', 'Torres multidireccionales de alta seguridad y soporte pesado para line array', 600.00, 2)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO paquetes (nombre, descripcion, precio_base) VALUES
-('Paquete Básico', 'Tarima 2x3m, torres catraca de 3m, 8 estrobos y 2 cabezas móviles Beam 360', 3500.00)
+-- =====================================================
+-- 3. CABECERAS DE LOS 3 PAQUETES
+-- =====================================================
+INSERT INTO paquetes (nombre, descripcion, precio_base)
+VALUES
+    ('Paquete Concierto Masivo (Grande)', 
+     'Montaje completo: 20 subs, 16 medios, Layher 6m, 2 truss 9m, 6 beam, 16 strobos, 12 pantallas y efectos', 
+     14000.00),
+
+    ('Paquete Concierto Estándar (Mediano)', 
+     'Configuración mediana: 12 subs, 10 medios, andamios 5m, 6 pantallas, tarima 5x3.5m y 2 retornos JBL', 
+     8000.00),
+
+    ('Paquete Concierto Básico (Pequeño)', 
+     'Montaje compacto: 4 subs, 4 medios, torres telescópicas, 1 truss 9m, 2 beam, 6 barras y 4 strobos 1500W', 
+     4000.00)
 ON CONFLICT DO NOTHING;
 
-INSERT INTO paquete_detalles (id_paquete, id_item, cantidad) VALUES
-(1, 1, 1),
-(1, 2, 2),
-(1, 3, 8),
-(1, 4, 2)
-ON CONFLICT DO NOTHING;
+-- =====================================================
+-- 4. DETALLE: PAQUETE CONCIERTO MASIVO (GRANDE)
+-- =====================================================
+INSERT INTO paquete_detalles (id_paquete, id_item, cantidad)
+VALUES
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Subwoofer BASSBOSS 18"'), 20),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cajas acústicas NEXO 10"'), 16),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Monitores de Piso RCF'), 4),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Torre Multidireccional Layher 6.00 m'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Puente de Iluminación Truss 9.00 m'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Tarima Principal 8.00m x 5.00m x 1.50m con escaleras'), 1),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cabezas Móviles Weinas Beam'), 6),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Estrobo 1500 W'), 8),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Estrobo 1000 W'), 8),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Barras LED RGB'), 20),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Máquinas lanzallamas DMX'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Máquina lanzahumo Weinas'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Masivo (Grande)'),
+     (SELECT id_item FROM items WHERE nombre = 'Módulo Gabinete LED NovaStar Outdoor (1.00 m x 0.50 m)'), 12);
+
+-- =====================================================
+-- 5. DETALLE: PAQUETE CONCIERTO ESTÁNDAR (MEDIANO)
+-- =====================================================
+INSERT INTO paquete_detalles (id_paquete, id_item, cantidad)
+VALUES
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Subwoofer BASSBOSS 18"'), 12),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cajas acústicas NEXO 10"'), 10),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Monitores de Piso JBL'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Torre de Andamio Reforzado 5.40 m'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Tarima Mediana 5.00m x 3.50m x 1.00m'), 1),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cabezas Móviles Weinas Beam'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Estrobo 1000 W'), 8),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Barras LED RGB'), 12),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Máquinas lanzallamas DMX'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Estándar (Mediano)'),
+     (SELECT id_item FROM items WHERE nombre = 'Módulo Gabinete LED NovaStar Outdoor (1.00 m x 0.50 m)'), 6);
+
+-- =====================================================
+-- 6. DETALLE: PAQUETE CONCIERTO BÁSICO (PEQUEÑO)
+-- =====================================================
+INSERT INTO paquete_detalles (id_paquete, id_item, cantidad)
+VALUES
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Subwoofer BASSBOSS 18"'), 4),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cajas acústicas NEXO 10"'), 4),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Torres Elevadoras Telescópicas 3.00 m (Par)'), 1),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Puente de Iluminación Truss 9.00 m'), 1),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Cabezas Móviles Weinas Beam'), 2),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Estrobo 1500 W'), 4),
+
+    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Barras LED RGB'), 6);
