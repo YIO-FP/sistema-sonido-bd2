@@ -152,8 +152,8 @@ VALUES
     ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
      'Puente de Iluminación Truss 9.00 m', 'Estructura truss de aluminio de alta resistencia para colgado de luces', 450.00, 3),
 
-    ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
-     'Torres Elevadoras Telescópicas 3.00 m (Par)', 'Par de torres elevadoras con malacate manual y acople superior para truss', 350.00, 1),
+((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
+     'Torre Elevadora Telescópica 3.00 m', 'Torre elevadora con malacate manual y acople superior para truss', 175.00, 2),
 
     ((SELECT id_categoria FROM categorias WHERE nombre = 'Tarimas y Estructuras de Montaje'),
      'Torre de Andamio Reforzado 5.40 m', 'Torres de andamio reforzado de dos módulos por lado para colgado', 300.00, 4),
@@ -270,8 +270,8 @@ VALUES
     ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
      (SELECT id_item FROM items WHERE nombre = 'Cajas acústicas NEXO 10"'), 4),
 
-    ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
-     (SELECT id_item FROM items WHERE nombre = 'Torres Elevadoras Telescópicas 3.00 m (Par)'), 1),
+((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
+     (SELECT id_item FROM items WHERE nombre = 'Torre Elevadora Telescópica 3.00 m'), 2),
 
     ((SELECT id_paquete FROM paquetes WHERE nombre = 'Paquete Concierto Básico (Pequeño)'),
      (SELECT id_item FROM items WHERE nombre = 'Puente de Iluminación Truss 9.00 m'), 1),
