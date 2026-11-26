@@ -19,6 +19,7 @@ def get_connection():
         dbname=os.getenv("DB_NAME", "sonido"),
         user=os.getenv("DB_USER", "postgres"),
         password=os.getenv("DB_PASSWORD", ""),
+        sslmode=os.getenv("DB_SSLMODE", "require"),
         cursor_factory=RealDictCursor,
     )
 
